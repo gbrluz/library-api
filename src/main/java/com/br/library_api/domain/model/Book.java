@@ -3,7 +3,7 @@ package com.br.library_api.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity(name = "book")
@@ -22,7 +22,7 @@ public class Book {
     private String isbn;
 
     @Column(nullable = false)
-    private Date publicationDate;
+    private LocalDate publicationDate;
 
     @ManyToMany
     @JoinTable(

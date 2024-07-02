@@ -17,8 +17,6 @@ public class BookController {
     private BookService bookService;
 
     @PostMapping
-    @ResponseBody
-    @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO) {
         BookDTO savedBookDTO = bookService.saveBook(bookDTO);
         return ResponseEntity.ok(savedBookDTO);
