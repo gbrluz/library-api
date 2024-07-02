@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
+
 public class RenterControllerTest {
     @Mock
     private RenterService renterService;
