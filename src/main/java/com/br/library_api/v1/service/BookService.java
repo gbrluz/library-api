@@ -1,5 +1,7 @@
 package com.br.library_api.v1.service;
 
+import com.br.library_api.client.GoogleBooksClient;
+import com.br.library_api.client.GoogleBooksResponse;
 import com.br.library_api.domain.model.Author;
 import com.br.library_api.domain.model.Book;
 import com.br.library_api.domain.model.dto.BookDTO;
@@ -26,7 +28,16 @@ public class BookService {
     @Autowired
     private RentRepository rentRepository;
 
+    @Autowired
+    private GoogleBooksClient googleBooksClient;
+
     public BookDTO saveBook(BookDTO bookDTO) {
+
+        GoogleBooksResponse response = googleBooksClient.getBookByIsbn("isbn:" + bookDTO.getIsbn());
+
+        if (response.getItems() == null || response.getItems().isEmpty()) {
+            throw new RuntimeException("Invalid ISBN. Book not found in Google Books.");
+        }
         Book book = new Book();
         book.setName(bookDTO.getName());
         book.setIsbn(bookDTO.getIsbn());
