@@ -119,4 +119,8 @@ Write a README file explaining the project, setup instructions, and technologies
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Challenges
 
+While building this API, I faced some challenges during it. The first moment that a had some doubts, was creating the tables of the entities. I was not used to work with Join Tables, because I always made the queries getting the data of different tables instead of creating it. Working with MockMvc was very challeging at first, because I had a very basic knowledge of this framework. Another challenge that I found, was to use ObjectMapper in some Controller tests that needed to. I was not used to work with it and a had to learn to be able to test the controller effectively.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
