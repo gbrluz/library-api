@@ -12,6 +12,8 @@ import com.br.library_api.domain.repository.RenterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,6 +30,9 @@ public class RentService {
     @Autowired
     private RenterRepository renterRepository;
 
+    private static final double LATE_FEE_PER_DAY = 1.0;
+    private static final double RENTAL_FEE_PER_DAY = 2.0;
+
     public RentDTO saveRent(RentDTO rentDTO) {
         Rent rent = new Rent();
         rent.setPickupDate(rentDTO.getPickupDate());
@@ -39,6 +44,9 @@ public class RentService {
         Renter renter = renterRepository.findById(rentDTO.getRenterId())
                 .orElseThrow(() -> new RuntimeException("Renter not found"));
         rent.setRenter(renter);
+
+        rent.setRentalFee(calculateRentalFee(rent.getPickupDate(), rent.getReturnDate()));
+        rent.setLateFee(calculateLateFee(rent.getReturnDate()));
 
         Rent savedRent = rentRepository.save(rent);
         return mapToDTO(savedRent);
@@ -80,6 +88,8 @@ public class RentService {
         rentDTO.setReturnDate(rent.getReturnDate());
         rentDTO.setBookIds(rent.getBooks().stream().map(Book::getId).collect(Collectors.toList()));
         rentDTO.setRenterId(rent.getRenter().getId());
+        rentDTO.setLateFee(rent.getLateFee());
+        rentDTO.setRentalFee(rent.getRentalFee());
         return rentDTO;
     }
 
@@ -91,5 +101,21 @@ public class RentService {
         bookDTO.setPublicationDate(book.getPublicationDate());
         bookDTO.setAuthorIds(book.getAuthors().stream().map(Author::getId).collect(Collectors.toList()));
         return bookDTO;
+    }
+
+    private Double calculateRentalFee(LocalDate pickupDate, LocalDate returnDate) {
+        if (pickupDate == null || returnDate == null || returnDate.isBefore(pickupDate)) {
+            return 0.0;
+        }
+        long daysRented = ChronoUnit.DAYS.between(pickupDate, returnDate);
+        return daysRented * 2.0;
+    }
+
+    private Double calculateLateFee(LocalDate returnDate) {
+        if (returnDate == null || returnDate.isBefore(LocalDate.now())) {
+            return 0.0;
+        }
+        long daysLate = ChronoUnit.DAYS.between(LocalDate.now(), returnDate);
+        return daysLate * 1.0;
     }
 }
