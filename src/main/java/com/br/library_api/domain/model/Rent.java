@@ -36,4 +36,10 @@ public class Rent {
     @JoinColumn(name = "renter_id")
     private Renter renter;
 
+    @Column
+    private Double lateFee = 0.0;
+
+    @Column
+    private Double rentalFee = 0.0;
+
 }

@@ -15,4 +15,6 @@ public class RentDTO {
     private LocalDate returnDate;
     private List<Long> bookIds;
     private Long renterId;
+    private Double lateFee;
+    private Double rentalFee;
 }
